@@ -7,6 +7,8 @@ const PORT = process.env.PORT || 3000;
 const http = require('http').Server(app);
 const io = require('socket.io').listen(http);
 
+let currentColor;
+
 app.use(express.static(`${__dirname}/../`));
 
 app.get('/', (req, res) => {
@@ -15,6 +17,18 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) =>{
   console.log('a user is connected');
+  if (currentColor) {
+    socket.emit('color', currentColor);
+  }
+  socket.on('color', (color) => {
+    console.log(color);
+    currentColor = color;
+    io.emit('color', color);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('a user has disconnected');
+  });
 });
 
 // app.listen(PORT, () => {
