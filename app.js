@@ -1,4 +1,5 @@
-
+const socket = io();
+console.log(socket);
 console.log('We are in!');
 
 $('#red').on('click', (event) => {
