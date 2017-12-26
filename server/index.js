@@ -26,6 +26,11 @@ io.on('connection', (socket) =>{
     io.emit('color', color);
   });
 
+  socket.on('message', (message) => {
+    console.log(message);
+    io.emit('message', message);
+  });
+
   socket.on('disconnect', () => {
     console.log('a user has disconnected');
   });

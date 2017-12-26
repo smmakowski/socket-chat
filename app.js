@@ -17,7 +17,18 @@ $('#blue').on('click', (event) => {
   socket.emit('color', 'blue');
 });
 
+$('form').on('submit', (event) => {
+  event.preventDefault();
+  socket.emit('message', $('input').val());
+  $('input').val('');
+});
+
 socket.on('color', (color) => {
   console.log(color);
   $('body').css({'background-color': color})
+});
+
+socket.on('message', (message) => {
+  const $message = `<li>${message}</li>`;
+  $('#messages').append($message);
 });
