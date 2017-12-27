@@ -9,6 +9,7 @@ const io = require('socket.io').listen(http);
 
 let currentColor;
 let users = {}; // to store users
+let currentlyTyping = {}; // to store who's typing
 
 app.use(express.static(`${__dirname}/../`));
 
@@ -53,8 +54,22 @@ io.on('connection', (socket) =>{
     if (users[nickname]) {
       io.emit('leftRoom', ` ${nickname} has left the chat.`);
       delete users[nickname];
+      if (currentlyTyping[nickname]) {
+        delete currentlyTyping[nickname];
+        io.emit('isTyping', Object.keys(currentlyTyping));
+      }
       io.emit('users', Object.keys(users));
     }
+  });
+
+  socket.on('isTyping', (user) => {
+    console.log(user + ' is typing or not');
+    if (currentlyTyping[user]) { // if already typing delete
+      delete currentlyTyping[user];
+    } else { // add
+       currentlyTyping[user] = true;
+    }
+    io.emit('isTyping', Object.keys(currentlyTyping));
   });
 });
 
