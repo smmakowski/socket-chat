@@ -1,34 +1,70 @@
-const socket = io();
+$(document).ready(() => {
+  let nickname;
+  $('#chat').hide(); // hide chat
 
-console.log('We are in!');
+  const socket = io();
 
-$('#red').on('click', (event) => {
-  // $('body').css({'background-color': 'red'});
-  socket.emit('color', 'red');
-});
+  console.log('We are in!');
 
-$('#green').on('click', (event) => {
-  //$('body').css({'background-color': 'green'});
-  socket.emit('color', 'green');
-});
+  $('#red').on('click', (event) => {
+    // $('body').css({'background-color': 'red'});
+    socket.emit('color', 'red');
+  });
 
-$('#blue').on('click', (event) => {
-  //$('body').css({'background-color': 'blue'});
-  socket.emit('color', 'blue');
-});
+  $('#green').on('click', (event) => {
+    //$('body').css({'background-color': 'green'});
+    socket.emit('color', 'green');
+  });
 
-$('form').on('submit', (event) => {
-  event.preventDefault();
-  socket.emit('message', $('input').val());
-  $('input').val('');
-});
+  $('#blue').on('click', (event) => {
+    //$('body').css({'background-color': 'blue'});
+    socket.emit('color', 'blue');
+  });
 
-socket.on('color', (color) => {
-  console.log(color);
-  $('body').css({'background-color': color})
-});
+  $('#msg-form').on('submit', (event) => {
+    event.preventDefault();
+    socket.emit('message', {name: nickname, msg: $('#msg').val()});
+    $('input').val('');
+  });
 
-socket.on('message', (message) => {
-  const $message = `<li>${message}</li>`;
-  $('#messages').append($message);
+  socket.on('color', (color) => {
+    console.log(color);
+    $('body').css({'background-color': color})
+  });
+
+  socket.on('message', (message) => {
+    const $message = `<li>${message.name}: ${message.msg}</li>`;
+    $('#messages').append($message);
+  });
+
+  socket.on('joinedRoom', (message) =>{
+    const $message = `<li>${message}</li>`;
+    $('#messages').append($message);
+  });
+
+  socket.on('leftRoom', (message) => {
+    console.log(message);
+    const $message = `<li>${message}</li>`;
+    $('#messages').append($message);
+  });
+
+  socket.on('nickname', (message) => {
+    switch (message.code) {
+      case 'OK' :
+        $('#nickname-div').hide();
+        $('#chat').show();
+        nickname = message.name;
+        break;
+      case 'NO' :
+        alert(message.msg);
+      default:
+        // no nothing;
+    }
+  });
+
+  $('#nickname-form').on('submit', (event) => {
+    event.preventDefault();
+    socket.emit('nickname', $('#nickname-input').val());
+  });
+  // });
 });

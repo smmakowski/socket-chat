@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "angular": "^1.6.8",
     "express": "^4.16.2",
     "jquery": "^3.2.1",
     "socket.io": "^2.0.4"
