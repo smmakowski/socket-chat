@@ -23,7 +23,10 @@ $(document).ready(() => {
 
   $('#msg-form').on('submit', (event) => {
     event.preventDefault();
-    socket.emit('message', {name: nickname, msg: $('#msg').val()});
+    const text = $('#msg').val();
+    const $message = `<li>${nickname}: ${text}</li>`;
+    $('#messages').append($message);
+    socket.emit('message', {name: nickname, msg: text});
     $('input').val('');
   });
 
@@ -62,9 +65,20 @@ $(document).ready(() => {
     }
   });
 
+  socket.on('users', (users) =>{
+    console.log(users);
+    $('#users-list').empty();
+    console.log(users);
+    $('#users-count').text(users.length);
+    users.forEach((user) => {
+      $('#users-list').append(`<li>${user}</li>`);
+    });
+  });
+
   $('#nickname-form').on('submit', (event) => {
     event.preventDefault();
     socket.emit('nickname', $('#nickname-input').val());
+    $('#nickname-input').val('');
   });
   // });
 });

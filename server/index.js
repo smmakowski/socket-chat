@@ -16,16 +16,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../index.html`));
 });
 
-// app.post('/users', (req, res) => {
-//   console.log(req.body);
-//   if (!users[req.body.name]) {
-//     users[req.body.name] = true;
-//     res.json('OK');
-//   } else {
-//     res.json('NO');
-//   }
-// });
-
 io.on('connection', (socket) =>{
   console.log(socket.id);
   let nickname;
@@ -35,12 +25,14 @@ io.on('connection', (socket) =>{
   if (currentColor) {
     socket.emit('color', currentColor);
   }
+
   socket.on('nickname', (name) => {
     if(!users[name]) { // if not in the users obj
       users[name] = true; // add
       nickname = name;
       socket.emit('nickname', {name, code: 'OK'}); // emit OK for hide/show on clientdie
       io.emit('joinedRoom', `${nickname} has joined the chat.`) // emit to all users join
+      io.emit('users', Object.keys(users));
     } else {
       socket.emit('nickname', {code: 'NO', msg: `Username '${name}' , has already been taken`}); // emit NO for error
     }
@@ -54,20 +46,18 @@ io.on('connection', (socket) =>{
 
   socket.on('message', (message) => {
     console.log(message);
-    io.emit('message', message);
+    socket.broadcast.emit('message', message); // emit to all except sender
   });
 
   socket.on('disconnect', (socket) => {
     if (users[nickname]) {
       io.emit('leftRoom', ` ${nickname} has left the chat.`);
       delete users[nickname];
+      io.emit('users', Object.keys(users));
     }
   });
 });
 
-// app.listen(PORT, () => {
-//   console.log(`Listening on ${PORT}.`);
-// })
 http.listen(PORT, () => {
   console.log(`Now listening on PORT: ${PORT}.`);
 });
