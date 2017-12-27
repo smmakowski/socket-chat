@@ -15,12 +15,17 @@
   </div>
   <div id="chat">
     <h3>There are <span id="users-count">0</span> users online.</h3>
-    <ul id="users-list">
-    </ul>
+    <h3>You are <span id="your-name"></span>.</h3>
     <h3>Messages</h3>
     <ul id="messages">
     </ul>
     <p id="currently-typing"></p>
+    <div style="display:inline-block">
+      Who would you like to send you message to?
+      <select id='users-list'>
+      </select>
+    </div>
+
     <form id="msg-form" autocomplete="off">
       <input id="msg" name="message" type="text" required/>
       <button type="submit">Submit</button>
@@ -31,5 +36,6 @@
   </div>
 </body>
   <script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
+  <scripr src="./util/helpers.js"></script>
   <script src="./app.js"></script>
 </html>

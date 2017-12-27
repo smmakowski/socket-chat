@@ -18,7 +18,6 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) =>{
-  console.log(socket.id);
   let nickname;
   console.log('a user is connected');
   //io.emit('joinedRoom', `${socketId} has joined the chat.`)
@@ -29,10 +28,11 @@ io.on('connection', (socket) =>{
 
   socket.on('nickname', (name) => {
     if(!users[name]) { // if not in the users obj
-      users[name] = true; // add
+      users[name] = socket; // add
       nickname = name;
       socket.emit('nickname', {name, code: 'OK'}); // emit OK for hide/show on clientdie
-      io.emit('joinedRoom', `${nickname} has joined the chat.`) // emit to all users join
+      socket.emit('isTyping', Object.keys(currentlyTyping));
+      socket.broadcast.emit('joinedRoom', `${nickname} has joined the chat.`); // emit to al except sender that you join
       io.emit('users', Object.keys(users));
     } else {
       socket.emit('nickname', {code: 'NO', msg: `Username '${name}' , has already been taken`}); // emit NO for error
@@ -52,14 +52,16 @@ io.on('connection', (socket) =>{
 
   socket.on('disconnect', (socket) => {
     if (users[nickname]) {
+      console.log(users[nickname]['id']);
       io.emit('leftRoom', ` ${nickname} has left the chat.`);
-      delete users[nickname];
       if (currentlyTyping[nickname]) {
-        delete currentlyTyping[nickname];
+        delete users[nickname];
         io.emit('isTyping', Object.keys(currentlyTyping));
       }
+      delete users[nickname];
       io.emit('users', Object.keys(users));
     }
+    console.log('A user has disconnected');
   });
 
   socket.on('isTyping', (user) => {
@@ -70,6 +72,16 @@ io.on('connection', (socket) =>{
        currentlyTyping[user] = true;
     }
     io.emit('isTyping', Object.keys(currentlyTyping));
+  });
+
+  socket.on('private', (message) => {
+    let userId = users[message.to]['id'];
+    console.log(userId);
+    if (userId) {
+    socket.to(userId).emit('private', {from: message.from, msg: message.msg});
+    } else {
+      // what if they are not there?
+    }
   });
 });
 
