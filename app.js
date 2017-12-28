@@ -3,72 +3,69 @@ $(document).ready(() => {
   let nickname;
   let currentlyTyping = false;
   let sendGroup = 'everyone';
-  //$('#chat').hide(); // hide chat
 
   const socket = io();
 
-  // console.log('We are in!');
-
   $('#red').on('click', (event) => {
-    // $('body').css({'background-color': 'red'});
-    socket.emit('color', 'red');
+    socket.emit('color', '#c9302c');
   });
 
   $('#green').on('click', (event) => {
-    //$('body').css({'background-color': 'green'});
-    socket.emit('color', 'green');
+    socket.emit('color', '#449d44');
   });
 
   $('#blue').on('click', (event) => {
-    //$('body').css({'background-color': 'blue'});
-    socket.emit('color', 'blue');
+    socket.emit('color', '#31b0d5');
+  });
+
+  $('#yellow').on('click', (event) => {
+    socket.emit('color', '#ec971f');
   });
 
   $('#msg-form').on('submit', (event) => {
     event.preventDefault();
     const text = $('#msg').val();
     let $message;
-    //console.log('send group is', sendGroup);
 
     if (sendGroup === 'everyone') {
-      $message = `<div class="msg row">${nickname} : ${text}</div>`;
+      $message = `<div class="msg row publ"><b>YOU say</b> ${text}</div>`;
       socket.emit('message', {name: nickname, msg: text});
     } else {
-      $message = `<div class='msg private row'>${nickname} (PRIVATE TO ${sendGroup}) : ${text}</div>`;
+      $message = `<div class='msg priv row'><b>YOU whisper to ${sendGroup}</b> ${text}</div>`;
       socket.emit('private', {from: nickname, to: sendGroup, msg: text});
       console.log('SEND TO PRIVATE');
     }
+
     $('#messages').append($message);
     $('#msg').val('');
     currentlyTyping = false;
-    // console.log('submitted');
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
     socket.emit('isTyping', nickname);
   });
 
   socket.on('color', (color) => {
-    // console.log(color);
-    $('body').css({'background-color': color})
+    $('body').css({'background-color': color});
   });
 
   socket.on('message', (message) => {
-    const $message = `<div class="msg row">${message.name} : ${message.msg}</div>`;
+    const $message = `<div class="msg row publ"><div class="col"><b>${message.name} says</b> ${message.msg}</div></div>`;
     $('#messages').append($message);
   });
 
   socket.on('private', (message) => {
-    const $message = `<div class="msg private row">(PRIVATE MESSAGE FROM) ${message.from}) : ${message.msg}</div>`
-    // console.log(message);
+    const $message = `<div class="msg priv row"><b>${message.from} whispers to you</b> ${message.msg}</div>`
     $('#messages').append($message);
   })
 
-  socket.on('joinedRoom', (message) =>{
-    const $message = `<div class="room-event msg row">${message}</div>`;
+  socket.on('joinedRoom', (user) =>{
+    const $message = `<div class="room-event msg row"><b>${user}</b> has joined the room.</div>`;
     $('#messages').append($message);
   });
 
-  socket.on('leftRoom', (message) => {
+  socket.on('leftRoom', (user) => {
     // console.log(message);
-    const $message = `<div class="room-event msg row">${message.msg}</div>`;
+    const $message = `<div class="room-event msg row"><b>${user}</b> has left the room.</div>`;
     $('#messages').append($message);
     sendGroup = 'everyone';
   });
@@ -80,7 +77,7 @@ $(document).ready(() => {
         $('#nickname-entry').hide();
         $('#chat').show();
         nickname = message.name;
-        $('#messages').append('<div class="msg row">YOU have joined the chat.</div>');
+        $('#messages').append('<div class="msg row room-event"><b>YOU</b> have joined the chat.</div>');
         $('#subtitle').text(`You are currently in the chatroom as ${nickname}.`);
         break;
       case 'NO' :
@@ -93,6 +90,7 @@ $(document).ready(() => {
 
   socket.on('users', (users) =>{
     console.log(users);
+    $('#online-list').empty();
     $('#users-list').empty();
     console.log(users);
     $('#users-count').text(users.length);
@@ -100,8 +98,10 @@ $(document).ready(() => {
     users.forEach((user) => {
       if(user === nickname) {
         $('#your-name').text(user);
+        $('#online-list').append(`<li class="list-group-item">YOU</li>`);
       } else {
         $('#users-list').append(`<option value="${user}">${user}</option>`);
+        $('#online-list').append(`<li class="list-group-item">${user}</li>`);
       }
     });
   });

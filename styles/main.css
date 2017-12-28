@@ -6,49 +6,74 @@ li {
   style: none;
 }
 
+body {
+  padding: 5px;
+  background-color: #ec971f;
+}
+
 /*.msg:nth-of-type(even) {
   background-color: white;
 }*/
-.msg:nth-of-type(odd) {
+/*.msg:nth-of-type(odd) {
   background-color: gray;
+}*/
+.priv {
+  color: purple;
+}
+
+.publ {
+  color: #286090;
+}
+
+.room-event {
+  color: yellow;
+  font-style: italic;
 }
 #nickname-entry {
   margin: auto;
-  width: 50%;
   text-align: center;
 }
 
 #chat {
   display: none;
-  background-color: red;
+  opacity: .9;
   /*padding: 5px;*/
+  margin:auto;
   border-radius: 5px;
   /*height: 500px;*/
 }
 #messages {
-  /*height: 480px;*/
-  display: flex;
-  background-color: white;
+  height: 300px;
+
+  /*display: flex;*/
+  background-color: #36454f;
   overflow-y: scroll;
-  border-radius: 5px 0 0 0;
+  border-radius: 5px 5px 0 0;
   border-right: 1px black solid;
+  border-top: 1px black solid;
+  border-left: 1px black solid;
 
 }
-#meh {
-  background-color: green;
+#messenger {
+  border-radius: 5px;
 }
 .msg {
   padding: 3px;
 }
 
-#send-to {
-  background-color: orange;
-}
-
 #users-typing {
-  /*height: 30px;*/
+  height: 30px;
+  color: white;
   overflow-x: scroll;
-  background-color: pink;
+  overflow-y: hidden;
+  background-color: #36454f;
+
+  border-left: 1px black solid;
+  border-right: 1px black solid;
+  border-bottom: 1px black solid;
+  /*border-bottom: 1px black solid;*/
+  border-radius: 0 0 5px 5px;
+
 }
 /*#controls {
   margin: auto;
@@ -66,8 +91,9 @@ li {
 }*/
 
 #whos-online {
-  display: inline-block;
+  /*display: inline-block;
   /*height: 500px;*/
+  text-align: left;
 
 
 }

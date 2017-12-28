@@ -32,10 +32,10 @@ io.on('connection', (socket) =>{
       nickname = name;
       socket.emit('nickname', {name, code: 'OK'}); // emit OK for hide/show on clientdie
       socket.emit('isTyping', Object.keys(currentlyTyping));
-      socket.broadcast.emit('joinedRoom', `${nickname} has joined the chat.`); // emit to al except sender that you join
+      socket.broadcast.emit('joinedRoom', nickname); // emit to al except sender that you join
       io.emit('users', Object.keys(users));
     } else {
-      socket.emit('nickname', {code: 'NO', msg: `Username '${name}' , has already been taken`}); // emit NO for error
+      socket.emit('nickname', {code: 'NO', msg: `Username '${name}' , has already been taken.`}); // emit NO for error
     }
   });
 
@@ -53,7 +53,7 @@ io.on('connection', (socket) =>{
   socket.on('disconnect', (socket) => {
     if (users[nickname]) {
       console.log(users[nickname]['id']);
-      io.emit('leftRoom', {userLeft: nickname, msg: `${nickname} has left the chat.`});
+      io.emit('leftRoom', nickname);
       if (currentlyTyping[nickname]) {
         delete currentlyTyping[nickname];
         io.emit('isTyping', Object.keys(currentlyTyping));
