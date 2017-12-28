@@ -3,11 +3,11 @@ $(document).ready(() => {
   let nickname;
   let currentlyTyping = false;
   let sendGroup = 'everyone';
-  $('#chat').hide(); // hide chat
+  //$('#chat').hide(); // hide chat
 
   const socket = io();
 
-  console.log('We are in!');
+  // console.log('We are in!');
 
   $('#red').on('click', (event) => {
     // $('body').css({'background-color': 'red'});
@@ -28,7 +28,7 @@ $(document).ready(() => {
     event.preventDefault();
     const text = $('#msg').val();
     let $message;
-    console.log('send group is', sendGroup);
+    //console.log('send group is', sendGroup);
 
     if (sendGroup === 'everyone') {
       $message = `<div class="msg row">${nickname} : ${text}</div>`;
@@ -41,12 +41,12 @@ $(document).ready(() => {
     $('#messages').append($message);
     $('#msg').val('');
     currentlyTyping = false;
-    console.log('submitted');
+    // console.log('submitted');
     socket.emit('isTyping', nickname);
   });
 
   socket.on('color', (color) => {
-    console.log(color);
+    // console.log(color);
     $('body').css({'background-color': color})
   });
 
@@ -57,9 +57,8 @@ $(document).ready(() => {
 
   socket.on('private', (message) => {
     const $message = `<div class="msg private row">(PRIVATE MESSAGE FROM) ${message.from}) : ${message.msg}</div>`
-    console.log(message);
+    // console.log(message);
     $('#messages').append($message);
-
   })
 
   socket.on('joinedRoom', (message) =>{
@@ -68,7 +67,7 @@ $(document).ready(() => {
   });
 
   socket.on('leftRoom', (message) => {
-    console.log(message);
+    // console.log(message);
     const $message = `<div class="room-event msg row">${message.msg}</div>`;
     $('#messages').append($message);
     sendGroup = 'everyone';
@@ -85,7 +84,8 @@ $(document).ready(() => {
         $('#subtitle').text(`You are currently in the chatroom as ${nickname}.`);
         break;
       case 'NO' :
-        alert(message.msg);
+        $('#nickname-entry').effect('shake');
+        // alert(message.msg);
       default:
         // no nothing;
     }
@@ -123,7 +123,8 @@ $(document).ready(() => {
     if (isProperName(nickname)) {
       socket.emit('nickname', nickname);
     } else {
-      alert('Invalid nickname! Please create a nickname containing only alpahanumeric characters, and underscores.');
+      $('#nickname-entry').effect('shake');
+      // alert('Invalid nickname! Please create a nickname containing only alpahanumeric characters, and underscores.');
     }
 
     $('#nickname-input').val('');
@@ -133,14 +134,14 @@ $(document).ready(() => {
 
     event.preventDefault();
     let value = $('#msg').val();
-    console.log(value);
+    //console.log(value);
     if (value.length >= 1 && !currentlyTyping) {
       currentlyTyping = true;
       socket.emit('isTyping', nickname);
-      console.log('You are currently typing now');
+      //console.log('You are currently typing now');
     } else if (!value.length && currentlyTyping) {
       currentlyTyping = false;
-      console.log('You have stopped typing');
+    //  console.log('You have stopped typing');
       socket.emit('isTyping', nickname);
     }
     // do nothing if lenght is in between
@@ -150,7 +151,7 @@ $(document).ready(() => {
       const $this = $('#users-list');
       const $selectedUser = $this.val();
       sendGroup = $selectedUser;
-      console.log(sendGroup);
+      //console.log(sendGroup);
     });
 
   // });

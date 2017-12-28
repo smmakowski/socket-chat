@@ -23,32 +23,62 @@
   <div id="chat" class="container">
 
     <div class="row">
-      <div id="messages" class="col-8 container">
+      <div id="messages" class="col-xs-8">
       </div>
-      <div id="whos-online" class="col-4">
-        <h3>There are <span id="users-count">0</span> users online.</h3>
+      <div id="whos-online" class="col-xs-4">
+        <span>There are <span id="users-count">0</span> users online.</span>
+        <ul class="list-group">
+        </ul>
       </div>
     </div>
 
-  <div id="users-typing" class="row">
-    <p id="currently-typing"> </p>
-  </div>
   <div class="row">
-    Who would you like to send you message to?
-    <select id='users-list'>
-    </select>
-  </div>
-  <div id="controls" class="row">
-
-    <form id="msg-form" autocomplete="off">
-      <input id="msg" name="message" type="text" required/>
-      <button type="submit">Submit</button>
-    </form>
-    <button id="red">Red</button>
-    <button id="green">Green</button>
-    <button id="blue">Blue</button>
+    <div id="users-typing" class="col-xs-8">
+      <p id="currently-typing"></p>
+    </div>
+    <div id="send-to" class="col-xs-4 text-center">
+      <span>Send message to: </span>
+      <select id="users-list" class="selectpicker">
+      </select>
+    </div>
   </div>
 
+  <div class="row">
+    <div class="col-xs-8">
+    </div>
+
+  </div>
+
+  <div class="row text-center">
+    <div id="meh" class="col-xs-8">
+      <form id="msg-form" autocomplete="off">
+        <div class="input-group">
+        <input id="msg" class="form-control" name="message" type="text" required/>
+        <span class="input-group-btn"><button type="submit" class="btn btn-primary">Submit</button></span>
+        </div>
+      </form>
+    </div>
+    <div class="col-xs-4">
+      <div class="row">
+        Change background to:
+      </div>
+      <div class="row btn-group">
+        <button id="red" class="btn btn-danger">Red</button>
+        <button id="green" class="btn btn-success">Green</button>
+        <button id="blue" class="btn btn-info">Blue</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row text-center">
+    <div class="col-xs-4">
+      <!-- empty -->
+    </div>
+
+    <div class="col-xs-4">
+      <!-- empty -->
+    </div>
+  </div>
 
 
   </div>
