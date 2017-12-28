@@ -2,29 +2,43 @@
 <html>
 <head>
   <title></title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./styles/main.css">
   <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <h1>Socket</h1>
-  <div id="nickname-div">
-    <form id="nickname-form" autocomplete="off"s>
+  <header>
+    <h1>Socket Chat</h1>
+    <h3 id="subtitle">Please enter a nickname before entering the chat room</h3>
+  </header>
+  <div id="nickname-entry" class="well">
+    <form id="nickname-form" autocomplete="off">
       <p>Please enter a nickname</p>
       <input id="nickname-input" name="nickname" type="text" required />
       <button type="submit">Join Room</button>
     </form>
   </div>
-  <div id="chat">
-    <h3>There are <span id="users-count">0</span> users online.</h3>
-    <h3>You are <span id="your-name"></span>.</h3>
-    <h3>Messages</h3>
-    <ul id="messages">
-    </ul>
-    <p id="currently-typing"></p>
-    <div style="display:inline-block">
-      Who would you like to send you message to?
-      <select id='users-list'>
-      </select>
+
+  <div id="chat" class="container">
+
+    <div class="row">
+      <div id="messages" class="col-8 container">
+      </div>
+      <div id="whos-online" class="col-4">
+        <h3>There are <span id="users-count">0</span> users online.</h3>
+      </div>
     </div>
+
+  <div id="users-typing" class="row">
+    <p id="currently-typing"> </p>
+  </div>
+  <div class="row">
+    Who would you like to send you message to?
+    <select id='users-list'>
+    </select>
+  </div>
+  <div id="controls" class="row">
 
     <form id="msg-form" autocomplete="off">
       <input id="msg" name="message" type="text" required/>
@@ -32,10 +46,14 @@
     </form>
     <button id="red">Red</button>
     <button id="green">Green</button>
-    <button id="blue">Blue</bbutton>
+    <button id="blue">Blue</button>
+  </div>
+
+
+
   </div>
 </body>
   <script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
-  <scripr src="./util/helpers.js"></script>
+  <script src="./util/helpers.js"></script>
   <script src="./app.js"></script>
 </html>

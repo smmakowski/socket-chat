@@ -1,3 +1,41 @@
-.selected {
-  font-weight: bold;
+header {
+  text-align: center;
 }
+
+li {
+  style: none;
+}
+
+.msg:nth-of-type(even) {
+  background-color: white;
+}
+.msg:nth-of-type(odd) {
+  background-color: gray;
+}
+#nickname-entry {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+}
+
+/*#controls {
+  margin: auto;
+  /*width: 75%;
+  border: solid 1px black;
+  text-align: center;s
+}
+
+#feed {
+  display: inline-block;
+  width: 75%;
+  height: 500px;
+  border: solid 2px gray;
+  /*overflow-y: scroll;
+}
+
+#whos-online {
+  display: inline-block;
+  height: 500px;
+  width: 20%;
+
+}*/

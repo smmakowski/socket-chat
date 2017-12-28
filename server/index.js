@@ -53,9 +53,9 @@ io.on('connection', (socket) =>{
   socket.on('disconnect', (socket) => {
     if (users[nickname]) {
       console.log(users[nickname]['id']);
-      io.emit('leftRoom', ` ${nickname} has left the chat.`);
+      io.emit('leftRoom', {userLeft: nickname, msg: `${nickname} has left the chat.`});
       if (currentlyTyping[nickname]) {
-        delete users[nickname];
+        delete currentlyTyping[nickname];
         io.emit('isTyping', Object.keys(currentlyTyping));
       }
       delete users[nickname];

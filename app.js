@@ -1,4 +1,5 @@
 $(document).ready(() => {
+  isProperName('asdf');
   let nickname;
   let currentlyTyping = false;
   let sendGroup = 'everyone';
@@ -30,15 +31,15 @@ $(document).ready(() => {
     console.log('send group is', sendGroup);
 
     if (sendGroup === 'everyone') {
-      $message = `<li>${nickname} : ${text}</li>`;
+      $message = `<div class="msg row">${nickname} : ${text}</div>`;
       socket.emit('message', {name: nickname, msg: text});
     } else {
-      $message = `<li>${nickname} (PRIVATE TO ${sendGroup}) : ${text}`;
+      $message = `<div class='msg private row'>${nickname} (PRIVATE TO ${sendGroup}) : ${text}</div>`;
       socket.emit('private', {from: nickname, to: sendGroup, msg: text});
       console.log('SEND TO PRIVATE');
     }
     $('#messages').append($message);
-    $('input').val('');
+    $('#msg').val('');
     currentlyTyping = false;
     console.log('submitted');
     socket.emit('isTyping', nickname);
@@ -50,35 +51,38 @@ $(document).ready(() => {
   });
 
   socket.on('message', (message) => {
-    const $message = `<li>${message.name} : ${message.msg}</li>`;
+    const $message = `<div class="msg row">${message.name} : ${message.msg}</div>`;
     $('#messages').append($message);
   });
 
   socket.on('private', (message) => {
-    const $message = `<li>(PRIVATE MESSAGE FROM) ${message.from}) : ${message.msg}</li>`
+    const $message = `<div class="msg private row">(PRIVATE MESSAGE FROM) ${message.from}) : ${message.msg}</div>`
     console.log(message);
     $('#messages').append($message);
 
   })
 
   socket.on('joinedRoom', (message) =>{
-    const $message = `<li>${message}</li>`;
+    const $message = `<div class="room-event msg row">${message}</div>`;
     $('#messages').append($message);
   });
 
   socket.on('leftRoom', (message) => {
     console.log(message);
-    const $message = `<li>${message}</li>`;
+    const $message = `<div class="room-event msg row">${message.msg}</div>`;
     $('#messages').append($message);
+    sendGroup = 'everyone';
   });
 
   socket.on('nickname', (message) => {
     switch (message.code) {
       case 'OK' :
-        $('#nickname-div').hide();
+        $('nickname-input').val('');
+        $('#nickname-entry').hide();
         $('#chat').show();
         nickname = message.name;
-        $('#messages').append('<li>YOU have joined the chat.</li>');
+        $('#messages').append('<div class="msg row">YOU have joined the chat.</div>');
+        $('#subtitle').text(`You are currently in the chatroom as ${nickname}.`);
         break;
       case 'NO' :
         alert(message.msg);
@@ -115,7 +119,13 @@ $(document).ready(() => {
 
   $('#nickname-form').on('submit', (event) => {
     event.preventDefault();
-    socket.emit('nickname', $('#nickname-input').val());
+    let nickname = $('#nickname-input').val();
+    if (isProperName(nickname)) {
+      socket.emit('nickname', nickname);
+    } else {
+      alert('Invalid nickname! Please create a nickname containing only alpahanumeric characters, and underscores.');
+    }
+
     $('#nickname-input').val('');
   });
 
