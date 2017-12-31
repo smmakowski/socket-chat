@@ -1,10 +1,8 @@
 $(document).ready(() => {
-  isProperName('asdf');
+  const socket = io();
   let nickname;
   let currentlyTyping = false;
   let sendGroup = 'everyone';
-
-  const socket = io();
 
   $('#red').on('click', (event) => {
     socket.emit('color', '#c9302c');
@@ -65,9 +63,17 @@ $(document).ready(() => {
 
   socket.on('leftRoom', (user) => {
     // console.log(message);
-    const $message = `<div class="room-event msg row"><b>${user}</b> has left the room.</div>`;
-    $('#messages').append($message);
-    sendGroup = 'everyone';
+    if (user === nickname) {
+      nickname = null;
+      $('#messages').empty();
+      $('#chat').hide();
+      $('#nickname-div').show();
+      $
+    } else {
+      const $message = `<div class="room-event msg row"><b>${user}</b> has left the room.</div>`;
+      $('#messages').append($message);
+      sendGroup = 'everyone';
+    }
   });
 
   socket.on('nickname', (message) => {

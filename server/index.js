@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
+console.log('ENVIRONEMNT IS', process.env.NODE_ENV);
 const http = require('http').Server(app);
 const io = require('socket.io').listen(http);
 
